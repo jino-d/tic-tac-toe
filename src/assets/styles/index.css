@@ -5,21 +5,22 @@
 .custom-button{
   @apply text-5xl;  
   @apply border-2;
-  @apply bg-slate-400;
+  @apply bg-slate-500;
   @apply text-white;
   @apply font-semibold;
-  /* @apply py-20; */
-  /* @apply px-3; */
-
   @apply h-40;
   @apply border-neutral-300;
   @apply rounded;
 }
 
+.winner-button{
+  @apply bg-green-600;
+}
+
 .play-again-button{
   @apply rounded;
   @apply border-2;
-  @apply bg-slate-400;
+  @apply bg-slate-500;
   @apply text-white;
   @apply w-28;
   @apply h-12;
