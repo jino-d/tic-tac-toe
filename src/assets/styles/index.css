@@ -8,7 +8,7 @@
   @apply bg-slate-500;
   @apply text-white;
   @apply font-semibold;
-  @apply h-40;
+  @apply h-[150px];
   @apply border-neutral-300;
   @apply rounded;
 }

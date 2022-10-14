@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback} from 'react'
+import { useState, useEffect, useCallback} from 'react'
 
 const useBoard = () => {
     let buttonArray = ['', '', '', '', '', '', '', '', '']
@@ -18,9 +18,9 @@ const useBoard = () => {
     const [hasWinner, setHasWinner] =  useState(false)
     const [draw, setDraw] =  useState(false)
 
-    const onClickHandler = useCallback((value) => {
-        setBoard(board.map((val, index) => {
-            if (index == value && val == ''){
+    const addPlayerToBoard = useCallback((value) => {
+        const newboard = board.map((val, index) => {
+            if (index == value && val == '') {
                 val = currentPlayer
                 if (currentPlayer == playerX)
                     setCurrentPlayer(playerO)
@@ -29,8 +29,9 @@ const useBoard = () => {
                 }
             }
             return val
-        }))
-    },[setCurrentPlayer, setBoard, board, currentPlayer, playerX, playerO])
+        })
+        setBoard(newboard)
+    }, [setCurrentPlayer, setBoard, board, currentPlayer, playerX, playerO])
 
     useEffect(() => {
         const dataset = board;
@@ -43,9 +44,7 @@ const useBoard = () => {
                 resultsO.push(i);
             }
         }
-        if (checkIfInWinningConditions(resultsX)) {
-            setHasWinner(true)
-        } else if(checkIfInWinningConditions(resultsO)) {
+        if (checkIfInWinningConditions(resultsX) || checkIfInWinningConditions(resultsO)) {
             setHasWinner(true)
         } else if (!board.includes('')) {
             setDraw(true)
@@ -53,13 +52,12 @@ const useBoard = () => {
         }
       }, [board, playerX, playerO, setHasWinner, setDraw]);
 
-
     const resetGame = useCallback(() =>{
         setBoard(buttonArray)
         setHasWinner(false)
         setDraw(false)
-        setNextPlayer(nextPlayer==playerO? playerX : playerO)
-    },[setBoard, setHasWinner, setDraw, setNextPlayer, nextPlayer, playerO, playerX])
+        setNextPlayer(nextPlayer==playerO ? playerX : playerO)
+    }, [setBoard, setHasWinner, setDraw, setNextPlayer, nextPlayer, playerO, playerX])
 
     useEffect(() => {
         setCurrentPlayer(nextPlayer)
@@ -69,7 +67,6 @@ const useBoard = () => {
         for (let index = 0; index < winningValues.length; index++) {
             let winningStatus = true
             const winningCondition = winningValues[index];
-
             for (const element of winningCondition) {
                 if (!results.includes(element)){
                     winningStatus = false
@@ -79,33 +76,17 @@ const useBoard = () => {
                 return winningStatus
         }
         return false
-    },[winningValues])
+    }, [winningValues])
 
-    const gameStatus = useMemo(() => {
-        let playerNumber =  currentPlayer == playerO  ? 1 : 2
-
-        if (hasWinner){
-            return (
-                `Player ${playerNumber} <${ currentPlayer == playerX? playerO: playerX }> wins!`
-            )
-        } else {
-            if (draw){
-                return (
-                    `Draw!`
-                )
-            }
-            return (
-                `Turn for Player ${playerNumber} <${currentPlayer}>`
-            )
-        }
-      }, [hasWinner, currentPlayer, draw, playerX, playerO]);
     return {
-        gameStatus,
         board,
         hasWinner,
         draw,
+        currentPlayer,
+        playerX,
+        playerO,
         resetGame,
-        onClickHandler
+        addPlayerToBoard,
     }
 }
 
